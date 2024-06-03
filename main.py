@@ -1,30 +1,36 @@
+from flask import Flask, jsonify
 import mysql.connector
 from mysql.connector import Error
 
-def connect_to_database():
+app = Flask(__name__)
+
+# Configuration for MySQL connection
+MYSQL_HOST = 'your_mysql_host'
+MYSQL_USER = 'your_mysql_user'
+MYSQL_PASSWORD = 'your_mysql_password'
+MYSQL_DATABASE = 'your_mysql_database'
+
+def check_mysql_connection():
     try:
         connection = mysql.connector.connect(
-            host='dbmysqlflexible001.mysql.database.azure.com',
-            user='u_instance_owner',
-            password='Welcome01',
-            ssl_disabled=False
+            host=MYSQL_HOST,
+            user=MYSQL_USER,
+            password=MYSQL_PASSWORD,
+            database=MYSQL_DATABASE
         )
-
         if connection.is_connected():
-            db_Info = connection.get_server_info()
-            print("Connected to MySQL Server version ", db_Info)
-            cursor = connection.cursor()
-            cursor.execute("select database();")
-            record = cursor.fetchone()
-            print("You're connected to database: ", record)
-
-    except Error as e:
-        print("Error while connecting to MySQL", e)
-    finally:
-        if (connection.is_connected()):
-            cursor.close()
             connection.close()
-            print("MySQL connection is closed")
+            return True
+    except Error as e:
+        print(f"Error: {e}")
+        return False
 
-if __name__ == "__main__":
-    connect_to_database()
+@app.route('/check_connection', methods=['GET'])
+def check_connection():
+    if check_mysql_connection():
+        return jsonify(status="OK"), 200
+    else:
+        return jsonify(status="False"), 500
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5000)
