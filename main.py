@@ -5,10 +5,10 @@ from mysql.connector import Error
 app = Flask(__name__)
 
 # Configuration for MySQL connection
-MYSQL_HOST = 'your_mysql_host'
-MYSQL_USER = 'your_mysql_user'
-MYSQL_PASSWORD = 'your_mysql_password'
-MYSQL_DATABASE = 'your_mysql_database'
+MYSQL_HOST = 'mysqlseverzbs001.mysql.database.azure.com'
+MYSQL_USER = 'u_instance_owner'
+MYSQL_PASSWORD = 'Welcome01!'
+MYSQL_DATABASE = 'db01'
 
 def check_mysql_connection():
     try:
